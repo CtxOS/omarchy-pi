@@ -1,13 +1,21 @@
-# Configure pacman after package installation completes. Offline target package
-# installs use the live ISO's offline pacman.conf until this final restore.
-cp -f "$OMARCHY_PATH/default/pacman/pacman-${OMARCHY_MIRROR:-stable}.conf" /etc/pacman.conf
-cp -f "$OMARCHY_PATH/default/pacman/mirrorlist-${OMARCHY_MIRROR:-stable}" /etc/pacman.d/mirrorlist
-
-# Wait for CUPS to own the file, the way omarchy-settings does, so pacman does
-# not turn the override into a .pacnew during ISO package installation.
-if [[ -f $OMARCHY_PATH/etc-overrides/cups-cups-files.conf && -f /etc/cups/cups-files.conf ]]; then
-  install -m 0640 -o root -g cups "$OMARCHY_PATH/etc-overrides/cups-cups-files.conf" /etc/cups/cups-files.conf
-  rm -f /etc/cups/cups-files.conf.pacnew
+# Configure pacman
+sudo cp -f ~/.local/share/omarchy/default/pacman/pacman.conf /etc/pacman.conf
+# Use safe mirrorlist updater to avoid overwriting a user's mirrorlist
+if [[ -x "$OMARCHY_BIN/omarchy-refresh-pacman-mirrorlist" ]]; then
+  if [[ -n "${OMARCHY_FORCE_MIRROR_OVERWRITE:-}" ]]; then
+    sudo "$OMARCHY_BIN/omarchy-refresh-pacman-mirrorlist" --force --backup || true
+  else
+    sudo "$OMARCHY_BIN/omarchy-refresh-pacman-mirrorlist" || true
+  fi
+else
+  sudo cp -f ~/.local/share/omarchy/default/pacman/mirrorlist /etc/pacman.d/mirrorlist
 fi
 
-source "$OMARCHY_INSTALL/hardware/pacman.sh"
+if lspci -nn | grep -q "106b:180[12]"; then
+  cat <<EOF | sudo tee -a /etc/pacman.conf >/dev/null
+
+[arch-mact2]
+Server = https://github.com/NoaHimesaka1873/arch-mact2-mirror/releases/download/release
+SigLevel = Never
+EOF
+fi
