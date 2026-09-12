@@ -74,7 +74,41 @@ Omarchy may provide a recommended mirrorlist during install, but it will not sil
 
 If you want to force a full overwrite you can either run the helper with `--force` and/or `--backup` to keep a timestamped backup, or set the environment variable `OMARCHY_FORCE_MIRROR_OVERWRITE=1` during install.
 
-## Boot Loop Recovery
+## Raspberry Pi image build (Pi4/5, aarch64)
+
+```bash
+# 1. Download ArchLinuxARM rpi tarball, then:
+sudo ./crate/pi-image/build.sh \
+  --img out/omarchy-pi.img --size 8G \
+  --tarball ArchLinuxARM-rpi-aarch64-latest.tar.gz \
+  --user pi --country us
+# optional: --allow-aur --aur-cache /var/cache/omarchy-pi-aur \
+#           --no-plymouth --wifi-ssid MyNet --wifi-psk secret
+
+# Prebuild AUR set once on a fast host so Pis never compile (recommended for --allow-aur):
+sudo AUR_CACHE=/var/cache/omarchy-pi-aur bash crate/pi-image/lib/aur-cache.sh --build
+# Rust wrapper (parity with build.sh flags):
+cargo run -p omarchy-pi-build --manifest-path crate/Cargo.toml -- mkimage \
+  --tarball ArchLinuxARM-rpi-aarch64-latest.tar.gz --img out/omarchy-pi.img \
+  --allow-aur --aur-cache /var/cache/omarchy-pi-aur
+
+# 2. Flash (or use --device /dev/sdX directly):
+sudo dd if=out/omarchy-pi.img of=/dev/sdX bs=4M status=progress conv=fsync
+
+# 3. Verify / smoke checks:
+bash test/test-pi-image.sh
+bash test/qemu-smoke.sh --img out/omarchy-pi.img
+# optional QEMU boot attempt (needs qemu-system-aarch64):
+bash test/qemu-smoke.sh --img out/omarchy-pi.img --boot
+cargo run -p omarchy-pi-build --manifest-path crate/Cargo.toml -- verify --img out/omarchy-pi.img
+```
+
+Pi notes: boots from FAT `/boot/{config.txt,cmdline.txt}` (no GRUB/Limine/UEFI —
+`install/login` bootloader steps self-skip on Pi); Hypr defaults to 1x scale +
+no-blur V3D profile (`config/hypr/monitors-pi.conf`, `default/hypr/looknfeel-pi.conf`);
+first boot grows the rootfs and creates the user (`crate/pi-image/firstboot/`).
+
+## Boot Loop Recovery (Apple/Asahi only)
 
 In case you end up in a Boot Loop, here's the solution:
 

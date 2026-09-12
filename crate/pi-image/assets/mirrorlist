@@ -1,0 +1,9 @@
+#
+# Arch Linux ARM repository mirrorlist — Omarchy-Pi default
+# https preferred. Order matters: first reachable wins.
+#
+Server = https://ca.us.mirror.archlinuxarm.org/$arch/$repo
+Server = https://de.mirror.archlinuxarm.org/$arch/$repo
+Server = https://uk.mirror.archlinuxarm.org/$arch/$repo
+Server = https://us.mirror.archlinuxarm.org/$arch/$repo
+Server = https://mirror.archlinuxarm.org/$arch/$repo

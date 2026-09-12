@@ -1,0 +1,17 @@
+# AUR / heavy / x86_64-risky — install only with ALLOW_AUR=1 and yay-bin cache.
+# Prefer *-bin. On 1-2GB Pi these can OOM without swap.
+OPTIONAL: yay-bin
+OPTIONAL: paru-bin
+OPTIONAL: omarchy-chromium
+OPTIONAL: omarchy-lazyvim
+OPTIONAL: walker
+OPTIONAL: impala
+OPTIONAL: typora
+OPTIONAL: obsidian
+OPTIONAL: ttf-ia-writer
+OPTIONAL: kdenlive
+OPTIONAL: localsend
+OPTIONAL: obs-studio
+# Signal/Spotify kept commented upstream — uncomment only if aarch64 verified:
+#OPTIONAL: signal-desktop
+#OPTIONAL: spotify

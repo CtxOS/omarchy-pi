@@ -27,8 +27,12 @@ if [[ "$ARCH" == "x86_64" ]]; then
 	run_logged $OMARCHY_INSTALL/config/hardware/fix-apple-t2.sh
 fi
 run_logged $OMARCHY_INSTALL/config/hardware/bluetooth.sh
-run_logged $OMARCHY_INSTALL/config/hardware/printer.sh
-run_logged $OMARCHY_INSTALL/config/hardware/usb-autosuspend.sh
-run_logged $OMARCHY_INSTALL/config/hardware/ignore-power-button.sh
-run_logged $OMARCHY_INSTALL/config/hardware/fix-f13-amd-audio-input.sh
-run_logged $OMARCHY_INSTALL/config/hardware/keyboard-backlight.sh
+if grep -qi raspberry /proc/device-tree/model 2>/dev/null || [[ -n "${OMARCHY_PI_BUILD:-}" ]]; then
+	run_logged $OMARCHY_INSTALL/config/hardware/pi.sh
+else
+	run_logged $OMARCHY_INSTALL/config/hardware/printer.sh
+	run_logged $OMARCHY_INSTALL/config/hardware/usb-autosuspend.sh
+	run_logged $OMARCHY_INSTALL/config/hardware/ignore-power-button.sh
+	run_logged $OMARCHY_INSTALL/config/hardware/fix-f13-amd-audio-input.sh
+	run_logged $OMARCHY_INSTALL/config/hardware/keyboard-backlight.sh
+fi

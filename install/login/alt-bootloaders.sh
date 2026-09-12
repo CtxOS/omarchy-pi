@@ -1,3 +1,9 @@
+# Pi guard (defense in depth — all.sh already skips us on Pi):
+# Pi boots from FAT /boot/{config.txt,cmdline.txt} via crate/pi-image, never grub/systemd-boot/UKI.
+if grep -qi raspberry /proc/device-tree/model 2>/dev/null || [[ -n "${OMARCHY_PI_BUILD:-}${OMARCHY_PI:-}" ]]; then
+  echo "alt-bootloaders: Raspberry Pi detected — skipping (managed by crate/pi-image/lib/boot-pi.sh)."
+  return 0 2>/dev/null || exit 0
+fi
 ARCH="$(uname -m)"
 if [[ "$ARCH" == "x86_64" || "$ARCH" == "aarch64" ]] && ! command -v limine &>/dev/null; then
   # Add kernel hooks

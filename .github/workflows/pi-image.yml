@@ -1,0 +1,15 @@
+name: pi-image
+on:
+  push:
+    paths: ["crate/**", "install/**", "test/test-pi-image.sh"]
+  pull_request:
+    paths: ["crate/**"]
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: for f in crate/pi-image/build.sh crate/pi-image/lib/*.sh test/test-pi-image.sh test/qemu-smoke.sh test/run-mirrorlist-sim.sh; do bash -n "$f"; done
+      - run: bash test/test-pi-image.sh
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo check -p omarchy-pi-build --manifest-path crate/Cargo.toml

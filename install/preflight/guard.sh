@@ -35,6 +35,17 @@ if [[ "$ARCH" != "x86_64" && "$ARCH" != "aarch64" ]]; then
   abort "x86_64 or ARM64 (aarch64) CPU (detected: $ARCH)"
 fi
 
+# Pi vs Asahi hint (informational, not fatal)
+if [[ -f /proc/device-tree/model ]]; then
+  MODEL="$(tr -d '\0' < /proc/device-tree/model 2>/dev/null || true)"
+  if echo "$MODEL" | grep -qi raspberry; then
+    echo "Guards: Raspberry Pi detected ($MODEL)"
+    export OMARCHY_PI=1
+  elif echo "$MODEL" | grep -qi "apple\|asahi"; then
+    echo "Guards: Apple/Asahi hardware detected ($MODEL)"
+  fi
+fi
+
 # Must not have Gnome or KDE already install
 if pacman -Qe gnome-shell &>/dev/null; then
   abort "Gnome is already installed. Omarchy requires a fresh, vanilla Arch install."

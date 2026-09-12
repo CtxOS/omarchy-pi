@@ -1,0 +1,13 @@
+[Unit]
+Description=Omarchy-Pi first boot (growfs, user, wifi)
+After=local-fs.target
+ConditionPathExists=/var/lib/omarchy-pi-firstboot
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/omarchy-pi-firstboot.sh
+ExecStartPost=/bin/rm -f /var/lib/omarchy-pi-firstboot
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
