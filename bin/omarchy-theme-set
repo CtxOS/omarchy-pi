@@ -1,12 +1,35 @@
 #!/bin/bash
+set -euo pipefail
 
 if [[ -z $1 && $1 != "CNCLD" ]]; then
-  echo "Usage: omarchy-theme-set <theme-name>"
+  echo "Usage: omarchy-theme-set <theme-name> [--pi]"
+  echo "  --pi  Apply Pi-optimized theme (1x scale, no blur, V3D-friendly)"
   exit 1
 fi
 
 THEMES_DIR="$HOME/.config/omarchy/themes/"
 CURRENT_THEME_DIR="$HOME/.config/omarchy/current/theme"
+
+if [[ "$1" == "--pi" ]]; then
+  # Pi-optimized theme variant
+  mkdir -p "$THEMES_DIR/pi"
+  cp "${OMARCHY_PATH:-$HOME/omarchy}/config/hypr/monitors-pi.conf" "$THEMES_DIR/pi/monitors.conf" 2>/dev/null || true
+  cp "${OMARCHY_PATH:-$HOME/omarchy}/default/hypr/looknfeel-pi.conf" "$THEMES_DIR/pi/looknfeel.conf" 2>/dev/null || true
+  ln -nsf "$THEMES_DIR/pi" "$CURRENT_THEME_DIR"
+  omarchy-theme-bg-next
+  omarchy-restart-waybar
+  omarchy-restart-swayosd
+  hyprctl reload
+  pkill -SIGUSR2 btop
+  makoctl reload
+  omarchy-theme-set-terminal
+  omarchy-theme-set-gnome
+  omarchy-theme-set-eza
+  omarchy-theme-set-browser
+  omarchy-theme-set-vscode
+  echo "[OK] Pi theme applied (SCALE=1, no blur, V3D-friendly)"
+  exit 0
+fi
 
 THEME_NAME=$(echo "$1" | sed -E 's/<[^>]+>//g' | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
 THEME_PATH="$THEMES_DIR/$THEME_NAME"

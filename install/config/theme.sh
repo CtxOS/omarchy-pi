@@ -3,12 +3,17 @@ sudo ln -snf /usr/share/icons/Adwaita/symbolic/actions/go-previous-symbolic.svg 
 sudo ln -snf /usr/share/icons/Adwaita/symbolic/actions/go-next-symbolic.svg /usr/share/icons/Yaru/scalable/actions/go-next-symbolic.svg
 
 # Setup theme links
+OMARCHY_PATH="${OMARCHY_PATH:-$HOME/.local/share/omarchy}"
 mkdir -p ~/.config/omarchy/themes
-for f in ~/.local/share/omarchy/themes/*; do ln -nfs "$f" ~/.config/omarchy/themes/; done
+for f in "$OMARCHY_PATH"/themes/*; do ln -nfs "$f" ~/.config/omarchy/themes/; done
 
-# Set initial theme
+# Set initial theme — Pi gets the Pi-optimized variant
 mkdir -p ~/.config/omarchy/current
-ln -snf ~/.config/omarchy/themes/tokyo-night ~/.config/omarchy/current/theme
+if [[ -n "${OMARCHY_PI_BUILD:-}${OMARCHY_PI:-}" ]] || grep -qi raspberry /proc/device-tree/model 2>/dev/null; then
+  ln -nsf "$OMARCHY_PATH/themes/pi" ~/.config/omarchy/current/theme
+else
+  ln -snf ~/.config/omarchy/themes/tokyo-night ~/.config/omarchy/current/theme
+fi
 ln -snf ~/.config/omarchy/current/theme/backgrounds/1-scenery-pink-lakeside-sunset-lake-landscape-scenic-panorama-7680x3215-144.png ~/.config/omarchy/current/background
 
 # Set specific app links for current theme

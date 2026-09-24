@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: for f in crate/pi-image/build.sh crate/pi-image/lib/*.sh test/test-pi-image.sh test/qemu-smoke.sh test/run-mirrorlist-sim.sh; do bash -n "$f"; done
+      - run: for f in crate/pi-image/build.sh crate/pi-image/lib/*.sh bin/omarchy-theme-set bin/omarchy-refresh-pacman-mirrorlist install/helpers/set-arm-mirrors.sh install/login/plymouth.sh install/post-install/pacman.sh fix-mirrors.sh test/test-pi-image.sh test/qemu-smoke.sh test/run-mirrorlist-sim.sh; do bash -n "$f"; done
       - run: bash test/test-pi-image.sh
       - uses: dtolnay/rust-toolchain@stable
       - run: cargo check -p omarchy-pi-build --manifest-path crate/Cargo.toml

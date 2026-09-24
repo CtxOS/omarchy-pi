@@ -3,12 +3,12 @@
 # Usage: sudo ./set-arm-mirrors.sh [country_code]
 
 MIRRORLIST_FILE="/etc/pacman.d/mirrorlist"
-COUNTRY=${1:-us}
+COUNTRY="us"
 FORCE=0
 BACKUP=0
-shift || true
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    --country) COUNTRY="$2"; shift 2 ;;
     --force) FORCE=1; shift ;;
     --backup) BACKUP=1; shift ;;
     *) shift ;;
@@ -18,22 +18,22 @@ done
 # List of some fast Arch Linux ARM mirrors by country
 case "$COUNTRY" in
   us)
-    MIRROR="Server = http://us.mirror.archlinuxarm.org/$arch/$repo"
+    MIRROR="Server = https://us.mirror.archlinuxarm.org/$arch/$repo"
     ;;
   de)
-    MIRROR="Server = http://de.mirror.archlinuxarm.org/$arch/$repo"
+    MIRROR="Server = https://de.mirror.archlinuxarm.org/$arch/$repo"
     ;;
   uk)
-    MIRROR="Server = http://uk.mirror.archlinuxarm.org/$arch/$repo"
+    MIRROR="Server = https://uk.mirror.archlinuxarm.org/$arch/$repo"
     ;;
   fr)
-    MIRROR="Server = http://fr.mirror.archlinuxarm.org/$arch/$repo"
+    MIRROR="Server = https://fr.mirror.archlinuxarm.org/$arch/$repo"
     ;;
   au)
-    MIRROR="Server = http://au.mirror.archlinuxarm.org/$arch/$repo"
+    MIRROR="Server = https://au.mirror.archlinuxarm.org/$arch/$repo"
     ;;
   *)
-    MIRROR="Server = http://mirror.archlinuxarm.org/$arch/$repo"
+    MIRROR="Server = https://mirror.archlinuxarm.org/$arch/$repo"
     ;;
 esac
 

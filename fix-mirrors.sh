@@ -7,6 +7,14 @@
 
 set -euo pipefail
 
+if [[ $EUID -ne 0 ]]; then
+  if command -v sudo >/dev/null 2>&1; then
+    exec sudo "$0" "$@"
+  fi
+  echo "[ERROR] This script must be run as root or via sudo to update /etc/pacman.conf and /etc/pacman.d/mirrorlist." >&2
+  exit 1
+fi
+
 # Setup pacman.conf first
 cat > /tmp/pacman.conf << 'EOL'
 # /etc/pacman.conf
@@ -75,22 +83,13 @@ LocalFileSigLevel = Optional
 # repo name header and Include lines. You can add preferred servers immediately
 # after the header, and they will be used before the default mirrors.
 
-[asahi-alarm]
-Include = /etc/pacman.d/mirrorlist.asahi-alarm
-
 [core]
 Include = /etc/pacman.d/mirrorlist
 
 [extra]
 Include = /etc/pacman.d/mirrorlist
 
-[community]
-Include = /etc/pacman.d/mirrorlist
-
 [alarm]
-Include = /etc/pacman.d/mirrorlist
-
-[aur]
 Include = /etc/pacman.d/mirrorlist
 EOL
 
@@ -101,7 +100,7 @@ if ! cmp -s /tmp/pacman.conf /etc/pacman.conf; then
 fi
 rm -f /tmp/pacman.conf
 
-SRC="$HOME/.local/share/omarchy/default/pacman/mirrorlist"
+SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/default/pacman/mirrorlist"
 DEST="/etc/pacman.d/mirrorlist"
 REPLACE=0
 PREFER=0
@@ -150,7 +149,7 @@ if [[ ! -f "$DEST" ]]; then
     exit 0
   fi
   # Build a minimal Arch Linux ARM mirror entry based on COUNTRY
-  arch_servers=("Server = http://$COUNTRY.mirror.archlinuxarm.org/")
+  arch_servers=("Server = https://$COUNTRY.mirror.archlinuxarm.org/\$arch/\$repo")
   # Write the servers (simple form)
   tmp=$(mktemp)
   for s in "${arch_servers[@]}"; do
@@ -207,7 +206,7 @@ for s in "${dest_servers[@]}"; do
 done
 
 # Build desired Arch Linux ARM servers
-arch_servers=("Server = http://$COUNTRY.mirror.archlinuxarm.org/\$arch/\$repo" "Server = http://mirror.archlinuxarm.org/\$arch/\$repo")
+arch_servers=("Server = https://$COUNTRY.mirror.archlinuxarm.org/\$arch/\$repo" "Server = https://mirror.archlinuxarm.org/\$arch/\$repo")
 
 # Build set of existing servers for lookup
 declare -A have
