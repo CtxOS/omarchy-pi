@@ -1,0 +1,9 @@
+# Omarchy-Pi boot config — Pi4/5, preserve *.dtb + overlays/ shipped by ALARM
+arm_64bit=1
+kernel=kernel8.img
+auto_initramfs=1
+initramfs initramfs-linux.img followkernel
+dtparam=audio=on
+display_auto_detect=1
+dtoverlay=vc4-kms-v3d
+disable_overscan=1

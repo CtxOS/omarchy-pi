@@ -1,0 +1,9 @@
+[package]
+name = "omarchy-pi-build"
+version = "0.1.0"
+edition = "2021"
+description = "Thin CLI wrapper over crate/pi-image/*.sh to build bootable Omarchy-Pi Arch ARM images"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+anyhow = "1"
