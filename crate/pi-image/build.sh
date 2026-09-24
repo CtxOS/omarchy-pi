@@ -77,16 +77,7 @@ sudo arch-chroot "$ROOT_MNT" bash -c "
 "
 
 # 7. firstboot payload
-sudo install -Dm755 "$SCRIPT_DIR/firstboot/growfs.sh" "$ROOT_MNT/usr/local/sbin/omarchy-pi-firstboot.sh"
-sudo install -Dm644 "$SCRIPT_DIR/firstboot/omarchy-pi-firstboot.service" "$ROOT_MNT/etc/systemd/system/omarchy-pi-firstboot.service"
-sudo touch "$ROOT_MNT/var/lib/omarchy-pi-firstboot"
-cat <<EOF | sudo tee "$ROOT_MNT/etc/omarchy-pi-firstboot.env" > /dev/null
-USER_NAME=$USER_NAME
-HOSTNAME=$HOSTNAME
-WIFI_SSID=$WIFI_SSID
-WIFI_PSK=$WIFI_PSK
-EOF
-sudo arch-chroot "$ROOT_MNT" systemctl enable omarchy-pi-firstboot.service || true
+ROOT="$ROOT_MNT" USER_NAME="$USER_NAME" HOSTNAME="$HOSTNAME" WIFI_SSID="$WIFI_SSID" WIFI_PSK="$WIFI_PSK" bash "$SCRIPT_DIR/lib/firstboot.sh"
 
 # 8. boot finalize
 ROOT="$ROOT_MNT" BOOT_MNT="$BOOT_MNT" OMARCHY_PI_PLYMOUTH="$PI_PLYMOUTH" bash "$SCRIPT_DIR/lib/boot-pi.sh"

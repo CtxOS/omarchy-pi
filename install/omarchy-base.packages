@@ -5,17 +5,17 @@
 
 # --- Omarchy core package list ---
 # These packages are always installed (required for a working system):
-linux-asahi
-linux-asahi-headers
-asahi-fwextract
-asahi-desktop-meta
+# Pi: linux-rpi, raspberrypi-bootloader, firmware-raspberrypi
+# Asahi: linux-asahi*, asahi-*, grub, efibootmgr (see omarchy-other.packages for x86_64)
+linux-rpi
+linux-rpi-headers
+raspberrypi-bootloader
+firmware-raspberrypi
 mesa
 mesa-utils
 mesa-demos
 fwupd
 nvme-cli
-grub
-efibootmgr
 alacritty
 avahi
 bash-completion
@@ -31,8 +31,8 @@ iwd
 nautilus
 noto-fonts
 nvim
-omarchy-chromium
-omarchy-lazyvim
+# OPTIONAL: omarchy-chromium
+# OPTIONAL: omarchy-lazyvim
 polkit-gnome
 qt5-wayland
 waybar
@@ -67,11 +67,11 @@ hyprpicker
 hyprshot
 hyprsunset
 imagemagick
-impala
+# OPTIONAL: impala
 imv
 inetutils
 jq
-kdenlive
+# OPTIONAL: kdenlive
 kvantum-qt5
 lazydocker
 lazygit
@@ -79,7 +79,7 @@ less
 libqalculate
 libreoffice
 llvm
-localsend
+# OPTIONAL: localsend
 luarocks
 mako
 man
@@ -89,15 +89,16 @@ noto-fonts-cjk
 noto-fonts-emoji
 noto-fonts-extra
 nss-mdns
-obs-studio
-obsidian
+# OPTIONAL: obs-studio
+# OPTIONAL: obsidian
 pamixer
 pinta
 playerctl
 plocate
 plymouth
 postgresql-libs
-power-profiles-daemon
+# power-profiles-daemon disabled on Pi (see install/config/hardware/pi.sh)
+# power-profiles-daemon
 python-gobject
 python-poetry-core
 python-terminaltexteffects
@@ -114,15 +115,15 @@ system-config-printer
 tldr
 tree-sitter-cli
 ttf-cascadia-mono-nerd
-ttf-ia-writer
+# OPTIONAL: ttf-ia-writer
 ttf-jetbrains-mono-nerd
-typora
+# OPTIONAL: typora
 tzupdate
 ufw
 ufw-docker
 unzip
 uwsm
-walker
+# OPTIONAL: walker
 wf-recorder
 whois
 wireless-regdb
@@ -137,5 +138,5 @@ xdg-desktop-portal-hyprland
 xmlstarlet
 xournalpp
 yaru-icon-theme
-yay
+yay-bin # Prefer yay-bin over yay
 zoxide

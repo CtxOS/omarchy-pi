@@ -1,22 +1,32 @@
 
 <img width="2560" height="1600" alt="screenshot-2025-09-23_23-46-46" src="https://github.com/user-attachments/assets/9d38cd95-ff1c-4bde-8756-52a94f391a9c" />
 
-# Omarchy-mac installation steps
+# Omarchy Pi installation steps
 
-_Disclaimer: This guide is intended for Apple Silicon MacBooks M1/M2 and has only been tested on the M1 variant released in 2020. It is advised that you follow the instructions in the manual very carefully lest you risk bricking the MacBook or getting stuck in a Boot Loop (I will provide a fix for that as well in the end)._
+_This project targets Raspberry Pi 4/5 on Arch Linux ARM (aarch64). The old Apple/Asahi installer flow was retained in earlier repo versions but is not the active path for this image build._
 
-## Step 1: Install Arch minimal from Asahi Alarm
+## Step 1: Prepare an Arch Linux ARM base
 
-Visit [https://asahi-alarm.org/](https://asahi-alarm.org/) and run the following script in your Terminal to start Asahi Alarm Installer:
+Download the current Raspberry Pi ARM64 tarball and create the base image or rootfs:
 
 ```bash
-curl https://asahi-alarm.org/installer-bootstrap.sh | sh
+curl -LO https://archlinuxarm.org/os/ArchLinuxARM-rpi-aarch64-latest.tar.gz
 ```
 
-Once inside the Asahi Alarm Installer, please follow the on-screen instructions (very carefully). A few recommendations:
+Then build the image or bootstrap the device with the repo scripts:
 
-- Ideally, you should have at least `50 GB` available on your SSD that you can dedicate to the Linux partition.
-- Choose `Asahi Arch Minimal` from the list of OS options the installer provides.
+```bash
+sudo ./crate/pi-image/build.sh \
+  --img out/omarchy-pi.img --size 8G \
+  --tarball ArchLinuxARM-rpi-aarch64-latest.tar.gz \
+  --user pi --country us
+```
+
+A few recommendations:
+
+- Use a class-10 SD card or a fast USB SSD for the image target.
+- Keep at least `8 GB` free for the image build and package cache.
+- Prefer the bundled ARM mirrorlist and the supported `[core]`, `[extra]`, and `[alarm]` repos.
 
 ## Step 2: Initial Arch Linux Setup
 

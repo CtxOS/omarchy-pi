@@ -1,4 +1,8 @@
 ARCH="$(uname -m)"
+if grep -qi raspberry /proc/device-tree/model 2>/dev/null || [[ -n "${OMARCHY_PI_BUILD:-}${OMARCHY_PI:-}" ]]; then
+  echo "limine-snapper: Raspberry Pi detected — skipping (managed by crate/pi-image)."
+  return 0 2>/dev/null || exit 0
+fi
 if [[ "$ARCH" == "x86_64" ]] && command -v limine &>/dev/null; then
   sudo tee /etc/mkinitcpio.conf.d/omarchy_hooks.conf <<EOF >/dev/null
 HOOKS=(base udev plymouth keyboard autodetect microcode modconf kms keymap consolefont block encrypt filesystems fsck btrfs-overlayfs)

@@ -12,7 +12,7 @@
 #   missing from the system file. This avoids removing Arch Linux ARM or user-added
 #   mirrors while still making Omarchy's recommended servers available.
 
-SRC="$HOME/.local/share/omarchy/default/pacman/mirrorlist"
+SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/default/pacman/mirrorlist"
 DEST="/etc/pacman.d/mirrorlist"
 
 force=0
